@@ -1,0 +1,72 @@
+# Compteur retraite
+
+Un petit programme Windows 11 qui affiche, **sur le bureau, par-dessus le fond d'écran et derrière les icônes**, le nombre de jours travaillés restant avant la retraite. Il affiche aussi un pourcentage de progression et une phrase bienveillante qui change chaque jour.
+
+- Le fond d'écran n'est jamais modifié.
+- Rien à installer : un seul fichier `CompteurRetraite.exe`, sans droits administrateur.
+- Un écran de réglage contient le prénom, la date de retraite, un calendrier des jours non travaillés, les actions en lot (par exemple « je ne travaille plus le mercredi ») et l'apparence.
+- Les week-ends et les jours fériés français sont retirés automatiquement.
+- Le programme se met à jour tout seul depuis les releases GitHub.
+
+Conception : [docs/superpowers/specs/2026-11-15-compteur-retraite-design.md](docs/superpowers/specs/2026-11-15-compteur-retraite-design.md)
+
+## Organisation
+
+| Dossier | Rôle |
+|---|---|
+| `src/CompteurRetraite.Core` | Toute la logique : fériés, calendrier, compteur, phrases, réglages, mise à jour. Testable partout. |
+| `src/CompteurRetraite.App` | L'application Windows (WPF) : compteur sur le bureau, icône près de l'horloge, réglages, installation. |
+| `tests/CompteurRetraite.Core.Tests` | Tests automatiques (xUnit). |
+| `docs/test-manuel-windows.md` | Ce qu'il faut vérifier à la main sur un vrai Windows. |
+
+Les 100 phrases sont dans [`src/CompteurRetraite.Core/Phrases/phrases.json`](src/CompteurRetraite.Core/Phrases/phrases.json). On peut les modifier librement : les tests vérifient qu'il y en a bien 100, au vouvoiement, avec la bonne répartition.
+
+## Compiler et tester (Linux ou Windows)
+
+Il faut le SDK .NET 10. Sous Linux, il peut être installé dans le dossier personnel :
+
+```bash
+curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 10.0 --install-dir "$HOME/.dotnet"
+```
+
+Puis :
+
+```bash
+export PATH="$HOME/.dotnet:$PATH"
+dotnet test
+scripts/publier.sh                      # produit publish/CompteurRetraite.exe, sans mise à jour automatique
+scripts/publier.sh proprietaire/depot   # même chose, avec la mise à jour automatique depuis ce dépôt
+```
+
+Sous Windows, `CompteurRetraite.exe --sans-installation` lance le compteur sans l'installer, ce qui est pratique pour essayer.
+
+## Mettre le projet sur GitHub
+
+1. Créez un dépôt **public** sur GitHub. La mise à jour lit les releases sans mot de passe.
+2. Poussez le code :
+
+   ```bash
+   git remote add origin https://github.com/proprietaire/depot.git
+   git push -u origin main
+   ```
+
+3. À chaque envoi, GitHub compile et lance les tests sur Windows (`.github/workflows/ci.yml`).
+
+## Publier une version
+
+```bash
+git tag v0.2.0
+git push origin v0.2.0
+```
+
+GitHub lance les tests, compile l'exe et crée une release qui contient `CompteurRetraite.exe` (`.github/workflows/release.yml`). Les compteurs déjà installés la récupèrent d'eux-mêmes, au plus tard 24 heures après, ou à l'ouverture de session suivante.
+
+**Important :** seuls les exe qui connaissent l'adresse du dépôt savent se mettre à jour, c'est-à-dire ceux produits par une release GitHub ou par `scripts/publier.sh proprietaire/depot`. Le **premier** exe à donner à Jean-Philippe doit donc venir d'une release GitHub.
+
+## Installer chez Jean-Philippe
+
+1. Téléchargez `CompteurRetraite.exe` depuis la dernière release.
+2. Double-cliquez dessus. Si Windows affiche « Windows a protégé votre ordinateur », cliquez sur **Informations complémentaires** puis **Exécuter quand même**. Le programme n'est pas signé numériquement.
+3. La fenêtre de bienvenue s'ouvre : indiquez la date du premier jour de retraite. C'est fini.
+
+Le programme est copié dans `%LocalAppData%\Programs\CompteurRetraite\` et ses réglages sont dans `%LocalAppData%\CompteurRetraite\`. Pour le retirer, ouvrez les Réglages puis cliquez sur « Désinstaller le compteur ».
