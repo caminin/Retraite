@@ -1,0 +1,28 @@
+# Windows 11 de test (dockur/windows) pour essayer le compteur sans autre PC.
+# Utiliser via tools/vm/vm.sh (le moteur Docker natif est nécessaire : Docker Desktop n'a pas accès à KVM).
+services:
+  windows:
+    image: dockurr/windows
+    container_name: compteur-windows
+    environment:
+      VERSION: "11l"          # Windows 11 IoT Enterprise LTSC 2024 (évaluation), base 24H2, sans TPM
+      LANGUAGE: "French"
+      REGION: "fr-FR"
+      KEYBOARD: "fr-FR"
+      RAM_SIZE: "4G"
+      CPU_CORES: "4"
+      DISK_SIZE: "40G"
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 127.0.0.1:8006:8006   # écran de la VM dans le navigateur : http://localhost:8006
+      - 127.0.0.1:3389:3389/tcp
+      - 127.0.0.1:3389:3389/udp
+    volumes:
+      - ${HOME}/VMs/compteur-retraite:/storage   # disque de la VM, hors du projet
+      - ../../publish:/shared                    # dossier « Shared » sur le bureau de Windows (lecteur Z:)
+    restart: "no"
+    stop_grace_period: 2m

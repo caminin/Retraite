@@ -40,6 +40,21 @@ scripts/publier.sh 0.2.0 proprietaire/depot   # même chose, avec la mise à jou
 
 Sous Windows, `CompteurRetraite.exe --sans-installation` lance le compteur sans l'installer, ce qui est pratique pour essayer.
 
+## Tester sur un Windows 11 virtuel (sans autre PC)
+
+Une machine virtuelle Windows 11 (LTSC 2024, base 24H2, évaluation gratuite de 90 jours) tourne dans Docker grâce à [dockur/windows](https://github.com/dockur/windows) :
+
+```bash
+sudo systemctl start docker        # moteur Docker natif : Docker Desktop n'a pas accès à KVM
+tools/vm/vm.sh demarrer            # 1re fois : téléchargement + installation automatique (~30 min)
+```
+
+- L'écran de Windows s'affiche dans le navigateur : <http://localhost:8006>.
+- Le dossier `publish/` du projet apparaît dans Windows sous le nom **Shared**, sur le bureau (lecteur `Z:`). Après `scripts/publier.sh`, le nouvel exe y est donc directement.
+- Le compte Windows est `Docker`, mot de passe `admin` (valeurs par défaut de dockur, pour cette VM de test uniquement).
+- Le disque de la VM (environ 20 Go) est dans `~/VMs/compteur-retraite`, hors du projet.
+- `tools/vm/vm.sh arreter` arrête Windows proprement, `tools/vm/vm.sh etat` affiche son état.
+
 ## Mettre le projet sur GitHub
 
 1. Créez un dépôt **public** sur GitHub. La mise à jour lit les releases sans mot de passe.
