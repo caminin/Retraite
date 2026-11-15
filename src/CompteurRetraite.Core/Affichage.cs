@@ -1,5 +1,3 @@
-using System.Globalization;
-
 namespace CompteurRetraite.Core;
 
 public enum Mode { AConfigurer, Compte, Retraite }
@@ -9,8 +7,6 @@ public sealed record EtatAffichage(Mode Mode, string Message, string Chiffre, st
 
 public static class Affichage
 {
-    private static readonly CultureInfo Fr = new("fr-FR");
-
     public static EtatAffichage Calculer(Donnees d, DateOnly aujourdhui)
     {
         if (d.Retraite is not { } retraite)
@@ -23,6 +19,6 @@ public static class Affichage
         int restants = Compteur.JoursRestants(c, aujourdhui, retraite);
         int pct = Compteur.Pourcentage(c, d.Installation, aujourdhui, retraite);
         string libelle = restants == 1 ? "jour travaillé avant la retraite" : "jours travaillés avant la retraite";
-        return new(Mode.Compte, "", restants.ToString("N0", Fr), libelle, pct, restants);
+        return new(Mode.Compte, "", Libelles.Nombre(restants), libelle, pct, restants);
     }
 }

@@ -3,97 +3,131 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:CompteurRetraite.App.Reglages"
         Title="Compteur retraite — Réglages"
-        Width="980" Height="760" MinWidth="760" MinHeight="560"
+        Width="960" Height="720" MinWidth="760" MinHeight="460"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource Fond}" Foreground="{StaticResource Encre}"
         FontFamily="Segoe UI Variable Text, Segoe UI" FontSize="16">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Margin="28,24,28,20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-            <!-- En-tête -->
-            <StackPanel Grid.Row="0" Margin="0,0,0,18">
-                <TextBlock x:Name="Titre" Style="{StaticResource Titre}" Text="Réglages du compteur" />
-                <TextBlock x:Name="SousTitre" Foreground="{StaticResource Discret}" TextWrapping="Wrap" Margin="0,4,0,0"
-                           Text="Vos changements sont enregistrés tout de suite." />
-                <Border Background="{StaticResource AccentClair}" CornerRadius="10" Padding="16,10" Margin="0,14,0,0"
-                        HorizontalAlignment="Left">
-                    <TextBlock x:Name="Resume" FontSize="22" FontWeight="SemiBold" Foreground="{StaticResource Accent}" />
-                </Border>
-            </StackPanel>
-
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5*" MinWidth="300" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="6*" />
-                </Grid.ColumnDefinitions>
-
-                <!-- Colonne gauche -->
-                <StackPanel Grid.Column="0">
-                    <Border Style="{StaticResource CarteStyle}">
-                        <StackPanel>
-                            <TextBlock Style="{StaticResource Etiquette}" Text="Prénom" />
-                            <TextBox x:Name="ChampPrenom" TextChanged="Prenom_Changed" />
-                            <TextBlock Style="{StaticResource Etiquette}" Text="Premier jour de retraite" Margin="0,16,0,6" />
-                            <DatePicker x:Name="ChampRetraite" SelectedDateChanged="Retraite_Changed" />
-                            <TextBlock x:Name="AideRetraite" Foreground="{StaticResource Discret}" FontSize="13" TextWrapping="Wrap"
-                                       Margin="0,6,0,0" Text="Le premier jour où vous ne travaillez plus. Ce jour-là n'est pas compté." />
-                        </StackPanel>
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="28,20,28,8">
+                <!-- En-tête : titre à gauche, résumé à droite -->
+                <DockPanel Margin="0,0,0,16">
+                    <Border DockPanel.Dock="Right" Background="{StaticResource AccentClair}" CornerRadius="10" Padding="16,8"
+                            VerticalAlignment="Center">
+                        <TextBlock x:Name="Resume" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource Accent}" />
                     </Border>
-
-                    <Border Style="{StaticResource CarteStyle}" x:Name="CarteLot">
-                        <StackPanel>
-                            <TextBlock Style="{StaticResource Etiquette}" Text="Plusieurs jours d'un coup" />
-                            <TextBlock TextWrapping="Wrap" Text="Je ne travaille plus le" Margin="0,4,0,6" />
-                            <WrapPanel>
-                                <ComboBox x:Name="ChoixJourOff" Margin="0,0,10,8" />
-                                <Button Style="{StaticResource BoutonPrincipal}" Content="Appliquer" Margin="0,0,0,8" Click="NeTravaillePlus_Click" />
-                            </WrapPanel>
-                            <TextBlock TextWrapping="Wrap" Text="Je travaille de nouveau le" Margin="0,10,0,6" />
-                            <WrapPanel>
-                                <ComboBox x:Name="ChoixJourOn" Margin="0,0,10,8" />
-                                <Button Style="{StaticResource Bouton}" Content="Appliquer" Margin="0,0,0,8" Click="TravailleDeNouveau_Click" />
-                            </WrapPanel>
-                            <TextBlock Foreground="{StaticResource Discret}" FontSize="13" TextWrapping="Wrap"
-                                       Text="À partir d'aujourd'hui et jusqu'à la retraite. Vous pourrez ensuite changer un jour en cliquant dessus." />
-                            <TextBlock x:Name="ResultatLot" Foreground="{StaticResource Accent}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,8,0,0" />
-                        </StackPanel>
-                    </Border>
-
-                    <Border Style="{StaticResource CarteStyle}">
-                        <StackPanel>
-                            <TextBlock Style="{StaticResource Etiquette}" Text="Position sur l'écran" />
-                            <WrapPanel x:Name="ChoixCoin" />
-                            <TextBlock Style="{StaticResource Etiquette}" Text="Taille" Margin="0,8,0,6" />
-                            <WrapPanel x:Name="ChoixTaille" />
-                            <TextBlock Style="{StaticResource Etiquette}" Text="Couleur du texte" Margin="0,8,0,6" />
-                            <WrapPanel x:Name="ChoixTheme" />
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
-
-                <!-- Colonne droite : calendrier -->
-                <Border Grid.Column="2" Style="{StaticResource CarteStyle}" VerticalAlignment="Top">
-                    <StackPanel>
-                        <TextBlock Style="{StaticResource Etiquette}" Text="Mes jours de travail" />
-                        <TextBlock x:Name="AideCalendrier" Foreground="{StaticResource Discret}" TextWrapping="Wrap" Margin="0,0,0,12"
-                                   Text="Cliquez sur un jour pour indiquer que vous ne travaillez pas (vacances, congé…). Cliquez de nouveau pour annuler." />
-                        <local:CalendrierMois x:Name="Calendrier" />
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                        <TextBlock x:Name="Titre" Style="{StaticResource Titre}" Text="Réglages du compteur" />
+                        <TextBlock x:Name="SousTitre" Foreground="{StaticResource Discret}" TextWrapping="Wrap" Margin="0,2,0,0"
+                                   Text="Vos changements sont enregistrés tout de suite." />
                     </StackPanel>
-                </Border>
-            </Grid>
+                </DockPanel>
 
-            <DockPanel Grid.Row="2" Margin="0,4,0,0">
-                <Button DockPanel.Dock="Left" Style="{StaticResource Lien}" Content="Désinstaller le compteur" Click="Desinstaller_Click"
-                        VerticalAlignment="Center" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*" MinWidth="320" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="6*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <!-- Prénom et date -->
+                        <Border Style="{StaticResource CarteStyle}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Etiquette}" Text="Prénom" />
+                                <TextBox x:Name="ChampPrenom" TextChanged="Prenom_Changed" />
+                                <TextBlock Style="{StaticResource Etiquette}" Text="Premier jour de retraite" Margin="0,16,0,6" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="70" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="90" />
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox x:Name="ChoixJour" Grid.Column="0" MinWidth="0" SelectionChanged="Date_Changed" />
+                                    <ComboBox x:Name="ChoixMois" Grid.Column="2" MinWidth="0" SelectionChanged="Date_Changed" />
+                                    <ComboBox x:Name="ChoixAnnee" Grid.Column="4" MinWidth="0" SelectionChanged="Date_Changed" />
+                                </Grid>
+                                <TextBlock Foreground="{StaticResource Discret}" FontSize="13" TextWrapping="Wrap" Margin="0,6,0,0"
+                                           Text="Le premier jour où vous ne travaillez plus. Ce jour-là n'est pas compté." />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Un jour de la semaine d'un coup -->
+                        <Border Style="{StaticResource CarteStyle}" x:Name="CarteLot">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Etiquette}" Text="Un jour chaque semaine" />
+                                <WrapPanel>
+                                    <TextBlock Text="Le" VerticalAlignment="Center" Margin="0,0,8,8" />
+                                    <ComboBox x:Name="ChoixJourSemaine" Margin="0,0,0,8" />
+                                </WrapPanel>
+                                <WrapPanel>
+                                    <Button Style="{StaticResource BoutonPrincipal}" Content="Je ne travaille pas" Margin="0,0,8,8"
+                                            Click="NeTravaillePlus_Click" />
+                                    <Button Style="{StaticResource Bouton}" Content="Je travaille" Margin="0,0,0,8"
+                                            Click="TravailleDeNouveau_Click" />
+                                </WrapPanel>
+                                <TextBlock Foreground="{StaticResource Discret}" FontSize="13" TextWrapping="Wrap"
+                                           Text="S'applique à partir d'aujourd'hui jusqu'à la retraite. Un jour se change ensuite d'un clic dans le calendrier." />
+                                <TextBlock x:Name="ResultatLot" Foreground="{StaticResource Accent}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,8,0,0" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Apparence -->
+                        <Border Style="{StaticResource CarteStyle}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Etiquette}" Text="Apparence du compteur" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="12" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="8" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="8" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="Position" VerticalAlignment="Center" />
+                                    <ComboBox x:Name="ChoixCoin" Grid.Row="0" Grid.Column="2" />
+                                    <TextBlock Grid.Row="2" Text="Taille" VerticalAlignment="Center" />
+                                    <ComboBox x:Name="ChoixTaille" Grid.Row="2" Grid.Column="2" />
+                                    <TextBlock Grid.Row="4" Text="Texte" VerticalAlignment="Center" />
+                                    <ComboBox x:Name="ChoixTheme" Grid.Row="4" Grid.Column="2" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Calendrier -->
+                    <Border Grid.Column="2" Style="{StaticResource CarteStyle}" VerticalAlignment="Top">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource Etiquette}" Text="Mes jours de travail" />
+                            <TextBlock x:Name="AideCalendrier" Foreground="{StaticResource Discret}" TextWrapping="Wrap" Margin="0,0,0,12" />
+                            <local:CalendrierMois x:Name="Calendrier" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Toujours visible, même sur un petit écran -->
+        <Border Grid.Row="1" Background="{StaticResource Carte}" BorderBrush="{StaticResource Trait}" BorderThickness="0,1,0,0"
+                Padding="28,10">
+            <DockPanel>
+                <Button DockPanel.Dock="Left" Style="{StaticResource Lien}" Content="Désinstaller le compteur"
+                        Click="Desinstaller_Click" VerticalAlignment="Center" />
                 <Button DockPanel.Dock="Right" Style="{StaticResource BoutonPrincipal}" Content="Fermer" MinWidth="120"
                         HorizontalAlignment="Right" Click="Fermer_Click" />
             </DockPanel>
-        </Grid>
-    </ScrollViewer>
+        </Border>
+    </Grid>
 </Window>

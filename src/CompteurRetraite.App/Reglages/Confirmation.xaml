@@ -1,0 +1,17 @@
+<Window x:Class="CompteurRetraite.App.Reglages.Confirmation"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Compteur retraite" SizeToContent="Height" Width="520"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize" ShowInTaskbar="False"
+        Background="{StaticResource Carte}" Foreground="{StaticResource Encre}"
+        FontFamily="Segoe UI Variable Text, Segoe UI" FontSize="17">
+    <StackPanel Margin="28,24">
+        <TextBlock x:Name="TexteTitre" FontSize="22" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,12" />
+        <TextBlock x:Name="TexteMessage" TextWrapping="Wrap" LineHeight="26" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,24,0,0">
+            <Button x:Name="BoutonNon" Style="{StaticResource Bouton}" Content="Annuler" MinWidth="120" Margin="0,0,10,0"
+                    IsCancel="True" Click="Non_Click" />
+            <Button x:Name="BoutonOui" Style="{StaticResource BoutonPrincipal}" MinWidth="120" IsDefault="True" Click="Oui_Click" />
+        </StackPanel>
+    </StackPanel>
+</Window>

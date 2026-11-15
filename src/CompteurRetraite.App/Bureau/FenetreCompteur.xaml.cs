@@ -72,8 +72,8 @@ public partial class FenetreCompteur : Window
         TexteMessage.Text = e.Message;
         TexteMessage.TextAlignment = alignTexte;
         TexteMessage.Foreground = encre;
-        TexteMessage.MaxWidth = taille * 5.5;
-        TexteMessage.FontSize = taille * 0.45;
+        TexteMessage.MaxWidth = taille * 4.5;
+        TexteMessage.FontSize = taille * 0.3;
 
         TexteChiffre.Text = e.Chiffre;
         TexteChiffre.FontSize = taille;
@@ -118,6 +118,7 @@ public partial class FenetreCompteur : Window
             Y = bas ? zone.Bottom - hauteur - marge : zone.Top + marge,
         };
         if (_parent != IntPtr.Zero) MapWindowPoints(IntPtr.Zero, _parent, ref p, 1);
-        SetWindowPos(hwnd, IntPtr.Zero, p.X, p.Y, largeur, hauteur, SWP_NOZORDER | SWP_NOACTIVATE);
+        // On ne fait que déplacer : la taille appartient à WPF (SizeToContent), sinon le texte peut être rogné.
+        SetWindowPos(hwnd, IntPtr.Zero, p.X, p.Y, 0, 0, SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSIZE);
     }
 }

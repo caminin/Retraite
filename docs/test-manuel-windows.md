@@ -12,7 +12,8 @@ Cochez chaque ligne. Si quelque chose ne va pas, notez la version de Windows : P
 - [ ] Le compteur **n'apparaît pas** dans la barre des tâches, ni dans Alt+Tab, ni dans Win+Tab.
 - [ ] Changez le fond d'écran (clic droit > Personnaliser) : **le compteur reste** et **le nouveau fond est intact**.
 - [ ] Essayez un fond d'écran clair et un fond foncé, avec le thème Clair puis Foncé dans les réglages : le texte reste lisible.
-- [ ] Les 4 coins (réglages > Apparence) : le texte se place dans le bon coin, aligné du bon côté, sans passer sous la barre des tâches.
+- [ ] Les 3 positions (réglages > Apparence) : le texte se place dans le bon coin, aligné du bon côté, sans passer sous la barre des tâches.
+- [ ] « Afficher le bureau » (coin en bas à droite de la barre des tâches, ou Win+D) : le compteur reste visible.
 - [ ] Les 3 tailles changent bien la taille du texte.
 - [ ] Seuls le chiffre, son libellé, une barre de progression et le pourcentage s'affichent (pas de phrase).
 
@@ -29,9 +30,9 @@ Cochez chaque ligne. Si quelque chose ne va pas, notez la version de Windows : P
 
 ## Écran de réglage
 
-- [ ] La fenêtre est lisible, avec de gros caractères ; tout tient sans défilement horizontal.
+- [ ] La fenêtre est lisible, avec de gros caractères ; sur un petit écran (1366 × 768), elle tient dans l'écran et les boutons « Fermer » / « Désinstaller » restent visibles en bas.
 - [ ] Changez le **prénom** : il est repris dans le titre de bienvenue et dans le message « Bonne retraite » du jour J.
-- [ ] Choisissez la **date de retraite** dans le calendrier déroulant : le résumé « Il reste … jours travaillés » et le bureau se mettent à jour tout de suite.
+- [ ] Choisissez la **date de retraite** avec les trois listes (jour, mois, année) : le résumé « Il reste … jours travaillés » et le bureau se mettent à jour tout de suite.
 - [ ] Sans date de retraite, le calendrier et les actions en lot sont grisés, et le bureau invite à ouvrir les réglages.
 - [ ] Dans le calendrier, les **week-ends** sont gris et non cliquables, les **jours fériés** orange, les **jours passés** pâles et non cliquables, et **aujourd'hui** est entouré.
 - [ ] Un clic sur un jour travaillé le passe en bleu (non travaillé) et le chiffre baisse de 1. Un second clic l'annule.

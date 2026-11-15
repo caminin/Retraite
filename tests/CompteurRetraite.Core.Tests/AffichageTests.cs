@@ -30,7 +30,7 @@ public class AffichageTests
         var e = Affichage.Calculer(d, Aujourdhui);
         Assert.Equal(Mode.Compte, e.Mode);
         int restants = d.Calendrier().CompterTravailles(Aujourdhui, d.Retraite.Value);
-        Assert.Equal(restants.ToString("N0", new System.Globalization.CultureInfo("fr-FR")), e.Chiffre);
+        Assert.Equal(Libelles.Nombre(restants), e.Chiffre);
         Assert.Matches(@"^\d[\d\u202F\u00A0]\d{3}$", e.Chiffre);
         Assert.Equal("jours travaillés avant la retraite", e.Libelle);
         Assert.Equal("", e.Message); // plus de phrase du jour : seul le chiffre s'affiche
@@ -106,4 +106,44 @@ public class DecisionLancementTests
     [Fact]
     public void Version_plus_ancienne_demarre_l_installee_si_rien_ne_tourne()
         => Assert.Equal(ActionLancement.Demarrer, DecisionLancement.Decider(Telecharge, Installe, true, V1, V2, false));
+}
+
+public class FormatNombreTests
+{
+    [Theory]
+    [InlineData(1163, "1 163")]
+    [InlineData(929, "929")]
+    [InlineData(12345, "12 345")]
+    public void Milliers_separes_par_une_espace_insecable_classique(int n, string attendu)
+        => Assert.Equal(attendu, Libelles.Nombre(n));
+
+    [Fact]
+    public void Le_chiffre_du_bureau_utilise_ce_format()
+    {
+        var d = new Donnees { Installation = new DateOnly(2026, 11, 16), Retraite = new DateOnly(2031, 6, 30) };
+        var e = Affichage.Calculer(d, new DateOnly(2026, 11, 16));
+        Assert.Equal(Libelles.Nombre(e.JoursRestants), e.Chiffre);
+        Assert.Contains(' ', e.Chiffre);
+    }
+}
+
+public class ChoixDateTests
+{
+    [Theory]
+    [InlineData(30, 6, 2031, "2031-06-30")]
+    [InlineData(31, 6, 2031, "2031-06-30")]
+    [InlineData(29, 2, 2030, "2030-02-28")]
+    [InlineData(29, 2, 2032, "2032-02-29")]
+    public void Composer_ramene_le_jour_dans_le_mois(int jour, int mois, int annee, string attendu)
+        => Assert.Equal(DateOnly.Parse(attendu), ChoixDate.Composer(jour, mois, annee));
+
+    [Fact]
+    public void Annees_proposees_de_cette_annee_a_dans_15_ans_plus_la_date_deja_choisie()
+    {
+        var annees = ChoixDate.Annees(new DateOnly(2026, 11, 16), new DateOnly(2050, 1, 1));
+        Assert.Equal(2026, annees.First());
+        Assert.Contains(2041, annees);
+        Assert.Contains(2050, annees);
+        Assert.Equal(annees.OrderBy(a => a), annees);
+    }
 }

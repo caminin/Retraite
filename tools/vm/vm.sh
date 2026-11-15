@@ -26,6 +26,11 @@ preparer() {
   cp "$CLE.pub" "$OEM/cle_test.pub"
 }
 
+scp_vm() {
+  scp -q -i "$CLE" -P 2222 -o IdentitiesOnly=yes -o PreferredAuthentications=publickey -o BatchMode=yes \
+      -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR "$@"
+}
+
 ssh_vm() { ssh -i "$CLE" -p 2222 -o IdentitiesOnly=yes -o PreferredAuthentications=publickey -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR Docker@127.0.0.1 "$@"; }
 
 # Exécute un script PowerShell local dans la VM (encodé, pour éviter les soucis de guillemets).
@@ -56,14 +61,14 @@ case "${1:-etat}" in
   ssh)       shift; ssh_vm "$@" ;;
   lancer)    shift; lancer_vm "$@" ;;
   taper)     shift; lancer_vm powershell.exe "-NoProfile -WindowStyle Hidden -Command (New-Object -ComObject WScript.Shell).SendKeys(''$*'')" ;;
-  diag)      scp -q -i "$CLE" -P 2222 -o IdentitiesOnly=yes -o PreferredAuthentications=publickey -o BatchMode=yes \
-               -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR \
-               scripts/diag-fenetres.ps1 Docker@127.0.0.1:C:/Users/Public/diag-fenetres.ps1
+  diag)      scp_vm scripts/diag-fenetres.ps1 Docker@127.0.0.1:C:/Users/Public/diag-fenetres.ps1
              lancer_vm powershell.exe '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File C:\Users\Public\diag-fenetres.ps1' >/dev/null
              sleep 8
              ssh_vm 'Get-Content C:\Users\Public\diag.txt' ;;
   installer-exe)
-             # Dans la session visible : copie depuis le dossier partagé (Z:) vers Téléchargements, puis double-clic.
-             lancer_vm powershell.exe '-NoProfile -WindowStyle Hidden -Command Copy-Item Z:\CompteurRetraite.exe $env:USERPROFILE\Downloads -Force; Start-Process $env:USERPROFILE\Downloads\CompteurRetraite.exe' ;;
+             # Envoie publish/CompteurRetraite.exe dans Téléchargements (par SSH, plus fiable que le dossier partagé),
+             # puis le lance dans la session visible, comme un double-clic.
+             scp_vm ../../publish/CompteurRetraite.exe Docker@127.0.0.1:C:/Users/Docker/Downloads/CompteurRetraite.exe
+             lancer_vm 'C:\Users\Docker\Downloads\CompteurRetraite.exe' ;;
   *) echo "Usage : $0 demarrer|arreter|etat|supprimer|ssh|lancer|taper|diag|installer-exe"; exit 1 ;;
 esac
