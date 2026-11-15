@@ -10,8 +10,8 @@
         <StackPanel.Effect>
             <DropShadowEffect x:Name="Ombre" BlurRadius="12" ShadowDepth="1" Opacity="0.35" Color="Black" />
         </StackPanel.Effect>
-        <TextBlock x:Name="TextePhrase" FontStyle="Italic" TextWrapping="Wrap" Margin="0,0,0,6"
-                   FontFamily="Segoe UI Variable Text, Segoe UI" />
+        <TextBlock x:Name="TexteMessage" TextWrapping="Wrap" FontWeight="SemiBold"
+                   FontFamily="Segoe UI Variable Display, Segoe UI" />
         <TextBlock x:Name="TexteChiffre" FontWeight="Bold" LineStackingStrategy="BlockLineHeight"
                    FontFamily="Segoe UI Variable Display, Segoe UI" />
         <TextBlock x:Name="TexteLibelle" FontFamily="Segoe UI Variable Text, Segoe UI" Margin="0,2,0,0" />

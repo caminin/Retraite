@@ -1,6 +1,8 @@
 # Compteur retraite — document de conception
 
-Date : 15/11/2026 · Statut : en attente de validation finale
+Date : 15/11/2026 · Statut : validé
+
+> **Révision du 15/11/2026 :** la phrase du jour est **retirée** à la demande de l'utilisateur (phrases jugées peu convaincantes). Le bureau n'affiche plus que le chiffre, son libellé et la barre de progression. Les sections 5.3 et 6.3, et toute mention de phrases ailleurs, sont caduques. Seuls deux messages subsistent : « Ouvrez les réglages pour indiquer votre date de retraite. » et « Bonne retraite, {prénom} ! ».
 
 ## 1. Intention
 
@@ -62,7 +64,7 @@ Choix de l'utilisateur : .NET 10, pour un rendu plus joli. WPF est la conséquen
 - Il part de **0 % le jour de l'installation** et atteint **100 % le jour de la retraite**.
 - La date d'installation est enregistrée au premier lancement. Ni une mise à jour ni une réinstallation ne la remettent à zéro.
 
-### 5.3 La phrase du jour
+### 5.3 La phrase du jour (retirée)
 - **100 phrases** positives et bienveillantes, **au vouvoiement**, qui peuvent utiliser le prénom (« Jean-Philippe » par défaut, modifiable).
 - Deux types de phrases liées au contexte :
   - les **saisons et moments de l'année** : rentrée, fêtes, printemps, avant l'été… ;
@@ -110,7 +112,7 @@ Le statut d'un jour se décide dans cet ordre de priorité (le premier qui s'app
   - Les jours de vacances ne font donc pas avancer la barre.
   - Si la date de retraite est avant ou égale à la date d'installation, le pourcentage vaut 100.
 
-### 6.3 Phrases (Core)
+### 6.3 Phrases (Core) (retirées)
 
 - Les 100 phrases sont stockées dans un fichier JSON intégré au programme. Chacune a un texte (avec `{prenom}` éventuel) et une catégorie :
   - `general` ;

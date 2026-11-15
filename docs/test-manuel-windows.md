@@ -14,14 +14,14 @@ Cochez chaque ligne. Si quelque chose ne va pas, notez la version de Windows : P
 - [ ] Essayez un fond d'écran clair et un fond foncé, avec le thème Clair puis Foncé dans les réglages : le texte reste lisible.
 - [ ] Les 4 coins (réglages > Apparence) : le texte se place dans le bon coin, aligné du bon côté, sans passer sous la barre des tâches.
 - [ ] Les 3 tailles changent bien la taille du texte.
-- [ ] La phrase du jour s'affiche au-dessus du chiffre ; une barre de progression et le pourcentage sont en dessous.
+- [ ] Seuls le chiffre, son libellé, une barre de progression et le pourcentage s'affichent (pas de phrase).
 
 ## Icône, rafraîchissement, robustesse
 
 - [ ] Une icône bleue (petit sablier) est visible près de l'horloge, éventuellement dans la flèche « ^ ». Survolez-la : le nombre de jours s'affiche.
 - [ ] Clic droit sur l'icône : le menu propose « Réglages… », « Masquer le compteur » et « Quitter ». « Masquer » fait disparaître le compteur du bureau, puis le menu propose « Afficher le compteur ».
 - [ ] Un double-clic sur l'icône ouvre les réglages.
-- [ ] **Passage de minuit** : réglez l'horloge de Windows à 23:59 (Paramètres > Heure et langue), attendez 1 minute : le chiffre et la phrase changent. Remettez ensuite l'heure automatique.
+- [ ] **Passage de minuit** : réglez l'horloge de Windows à 23:59 (Paramètres > Heure et langue), attendez 1 minute : le chiffre change. Remettez ensuite l'heure automatique.
 - [ ] **Veille** : mettez le PC en veille le soir et réveillez-le le lendemain : le chiffre est celui du jour.
 - [ ] **Redémarrage de l'Explorateur** : Gestionnaire des tâches > « Explorateur Windows » > Redémarrer. Le compteur revient au bout de quelques secondes, et l'icône aussi.
 - [ ] **Relancer le programme** alors qu'il tourne déjà : ça ouvre les réglages, sans second compteur.
@@ -30,7 +30,7 @@ Cochez chaque ligne. Si quelque chose ne va pas, notez la version de Windows : P
 ## Écran de réglage
 
 - [ ] La fenêtre est lisible, avec de gros caractères ; tout tient sans défilement horizontal.
-- [ ] Changez le **prénom** : la phrase du bureau l'utilise (certaines phrases seulement), et le titre de bienvenue aussi.
+- [ ] Changez le **prénom** : il est repris dans le titre de bienvenue et dans le message « Bonne retraite » du jour J.
 - [ ] Choisissez la **date de retraite** dans le calendrier déroulant : le résumé « Il reste … jours travaillés » et le bureau se mettent à jour tout de suite.
 - [ ] Sans date de retraite, le calendrier et les actions en lot sont grisés, et le bureau invite à ouvrir les réglages.
 - [ ] Dans le calendrier, les **week-ends** sont gris et non cliquables, les **jours fériés** orange, les **jours passés** pâles et non cliquables, et **aujourd'hui** est entouré.

@@ -52,15 +52,16 @@ public partial class FenetreCompteur : Window
         var alignTexte = alignement == HorizontalAlignment.Right ? TextAlignment.Right : TextAlignment.Left;
         foreach (FrameworkElement el in Pile.Children) el.HorizontalAlignment = alignement;
 
-        TextePhrase.Text = e.Phrase;
-        TextePhrase.TextAlignment = alignTexte;
-        TextePhrase.Foreground = encre;
-        TextePhrase.MaxWidth = taille * 5.5;
-
+        // Hors décompte (date à saisir, retraite atteinte), un message remplace le chiffre.
         bool compte = e.Mode == Mode.Compte;
         TexteChiffre.Visibility = TexteLibelle.Visibility = ZoneProgression.Visibility =
             compte ? Visibility.Visible : Visibility.Collapsed;
-        TextePhrase.FontSize = compte ? taille * 0.22 : taille * 0.45;
+        TexteMessage.Visibility = compte ? Visibility.Collapsed : Visibility.Visible;
+        TexteMessage.Text = e.Message;
+        TexteMessage.TextAlignment = alignTexte;
+        TexteMessage.Foreground = encre;
+        TexteMessage.MaxWidth = taille * 5.5;
+        TexteMessage.FontSize = taille * 0.45;
 
         TexteChiffre.Text = e.Chiffre;
         TexteChiffre.FontSize = taille;

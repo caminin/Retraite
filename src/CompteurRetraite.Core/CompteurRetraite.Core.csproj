@@ -5,7 +5,4 @@
   <ItemGroup>
     <InternalsVisibleTo Include="CompteurRetraite.Core.Tests" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Phrases\phrases.json" LogicalName="CompteurRetraite.phrases.json" />
-  </ItemGroup>
 </Project>

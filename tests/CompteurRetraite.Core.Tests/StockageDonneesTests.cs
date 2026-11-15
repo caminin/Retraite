@@ -25,10 +25,6 @@ public sealed class StockageDonneesTests : IDisposable
         d.Apparence.Coin = Coin.HautGauche;
         d.Apparence.Taille = Taille.Grand;
         d.Apparence.Theme = Theme.Fonce;
-        d.Phrases.OrdreGeneral.AddRange(["g01", "g02"]);
-        d.Phrases.Position = 1;
-        d.Phrases.Historique["2026-11-16"] = "g01";
-        d.Phrases.EtapesVues.Add("jours-1000");
 
         s.Enregistrer(d);
         var lu = s.Charger(Aujourdhui);
@@ -41,10 +37,6 @@ public sealed class StockageDonneesTests : IDisposable
         Assert.Equal(Coin.HautGauche, lu.Apparence.Coin);
         Assert.Equal(Taille.Grand, lu.Apparence.Taille);
         Assert.Equal(Theme.Fonce, lu.Apparence.Theme);
-        Assert.Equal(["g01", "g02"], lu.Phrases.OrdreGeneral);
-        Assert.Equal(1, lu.Phrases.Position);
-        Assert.Equal("g01", lu.Phrases.Historique["2026-11-16"]);
-        Assert.Contains("jours-1000", lu.Phrases.EtapesVues);
     }
 
     [Fact]
@@ -84,6 +76,15 @@ public sealed class StockageDonneesTests : IDisposable
         Assert.Equal(new DateOnly(2026, 1, 5), s.Charger(Aujourdhui).Installation);
         s.Enregistrer(new Donnees { Installation = new DateOnly(2026, 1, 6) });
         Assert.Equal(new DateOnly(2026, 1, 6), s.Charger(Aujourdhui).Installation);
+    }
+
+    [Fact]
+    public void Ancien_fichier_avec_des_phrases_se_charge_toujours()
+    {
+        File.WriteAllText(Fichier, """{"Installation":"2025-01-02","Retraite":"2031-06-30","Phrases":{"Position":3}}""");
+        var lu = new StockageDonnees(_dossier).Charger(Aujourdhui);
+        Assert.Equal(new DateOnly(2031, 6, 30), lu.Retraite);
+        Assert.False(File.Exists(Fichier + ".bak")); // pas considéré comme abîmé
     }
 
     [Fact]

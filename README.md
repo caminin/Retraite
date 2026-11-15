@@ -1,6 +1,6 @@
 # Compteur retraite
 
-Un petit programme Windows 11 qui affiche, **sur le bureau, par-dessus le fond d'écran et derrière les icônes**, le nombre de jours travaillés restant avant la retraite. Il affiche aussi un pourcentage de progression et une phrase bienveillante qui change chaque jour.
+Un petit programme Windows 11 qui affiche, **sur le bureau, par-dessus le fond d'écran et derrière les icônes**, le nombre de jours travaillés restant avant la retraite, avec un pourcentage de progression.
 
 - Le fond d'écran n'est jamais modifié.
 - Rien à installer : un seul fichier `CompteurRetraite.exe`, sans droits administrateur.
@@ -14,12 +14,10 @@ Conception : [docs/superpowers/specs/2026-11-15-compteur-retraite-design.md](doc
 
 | Dossier | Rôle |
 |---|---|
-| `src/CompteurRetraite.Core` | Toute la logique : fériés, calendrier, compteur, phrases, réglages, mise à jour. Testable partout. |
+| `src/CompteurRetraite.Core` | Toute la logique : fériés, calendrier, compteur, réglages, mise à jour. Testable partout. |
 | `src/CompteurRetraite.App` | L'application Windows (WPF) : compteur sur le bureau, icône près de l'horloge, réglages, installation. |
 | `tests/CompteurRetraite.Core.Tests` | Tests automatiques (xUnit). |
 | `docs/test-manuel-windows.md` | Ce qu'il faut vérifier à la main sur un vrai Windows. |
-
-Les 100 phrases sont dans [`src/CompteurRetraite.Core/Phrases/phrases.json`](src/CompteurRetraite.Core/Phrases/phrases.json). On peut les modifier librement : les tests vérifient qu'il y en a bien 100, au vouvoiement, avec la bonne répartition.
 
 ## Compiler et tester (Linux ou Windows)
 

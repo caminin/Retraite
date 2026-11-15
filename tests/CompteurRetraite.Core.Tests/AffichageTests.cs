@@ -1,18 +1,15 @@
-using CompteurRetraite.Core.Phrases;
-
 namespace CompteurRetraite.Core.Tests;
 
 public class AffichageTests
 {
-    private static readonly SelecteurPhrase Selecteur = new(BanquePhrases.Charger());
     private static readonly DateOnly Aujourdhui = new(2026, 11, 16);
 
     [Fact]
     public void Sans_date_de_retraite_invite_a_regler()
     {
-        var e = Affichage.Calculer(new Donnees { Installation = Aujourdhui }, Selecteur, Aujourdhui);
+        var e = Affichage.Calculer(new Donnees { Installation = Aujourdhui }, Aujourdhui);
         Assert.Equal(Mode.AConfigurer, e.Mode);
-        Assert.Equal("Ouvrez les réglages pour indiquer votre date de retraite.", e.Phrase);
+        Assert.Equal("Ouvrez les réglages pour indiquer votre date de retraite.", e.Message);
         Assert.Equal("", e.Chiffre);
     }
 
@@ -20,9 +17,9 @@ public class AffichageTests
     public void Le_jour_de_la_retraite_affiche_bonne_retraite()
     {
         var d = new Donnees { Installation = new DateOnly(2026, 1, 1), Retraite = Aujourdhui, Prenom = "Jean-Philippe" };
-        var e = Affichage.Calculer(d, Selecteur, Aujourdhui);
+        var e = Affichage.Calculer(d, Aujourdhui);
         Assert.Equal(Mode.Retraite, e.Mode);
-        Assert.Equal("Bonne retraite, Jean-Philippe !", e.Phrase);
+        Assert.Equal("Bonne retraite, Jean-Philippe !", e.Message);
         Assert.Equal(100, e.Pourcentage);
     }
 
@@ -30,21 +27,20 @@ public class AffichageTests
     public void En_cours_affiche_le_chiffre_formate_et_le_libelle()
     {
         var d = new Donnees { Installation = Aujourdhui, Retraite = new DateOnly(2031, 6, 30) };
-        var e = Affichage.Calculer(d, Selecteur, Aujourdhui);
+        var e = Affichage.Calculer(d, Aujourdhui);
         Assert.Equal(Mode.Compte, e.Mode);
         int restants = d.Calendrier().CompterTravailles(Aujourdhui, d.Retraite.Value);
         Assert.Equal(restants.ToString("N0", new System.Globalization.CultureInfo("fr-FR")), e.Chiffre);
         Assert.Matches(@"^\d[\d\u202F\u00A0]\d{3}$", e.Chiffre);
         Assert.Equal("jours travaillés avant la retraite", e.Libelle);
-        Assert.DoesNotContain("{prenom}", e.Phrase);
-        Assert.False(string.IsNullOrWhiteSpace(e.Phrase));
+        Assert.Equal("", e.Message); // plus de phrase du jour : seul le chiffre s'affiche
     }
 
     [Fact]
     public void Singulier_pour_un_seul_jour()
     {
         var d = new Donnees { Installation = Aujourdhui, Retraite = Aujourdhui.AddDays(1) };
-        var e = Affichage.Calculer(d, Selecteur, Aujourdhui);
+        var e = Affichage.Calculer(d, Aujourdhui);
         Assert.Equal("1", e.Chiffre);
         Assert.Equal("jour travaillé avant la retraite", e.Libelle);
     }
@@ -53,7 +49,7 @@ public class AffichageTests
     public void Retraite_avant_installation_ne_plante_pas()
     {
         var d = new Donnees { Installation = Aujourdhui, Retraite = Aujourdhui.AddDays(-30) };
-        var e = Affichage.Calculer(d, Selecteur, Aujourdhui);
+        var e = Affichage.Calculer(d, Aujourdhui);
         Assert.Equal(Mode.Retraite, e.Mode);
     }
 
@@ -61,7 +57,7 @@ public class AffichageTests
     public void Retraite_future_mais_installation_apres_aujourdhui_ne_plante_pas()
     {
         var d = new Donnees { Installation = Aujourdhui.AddDays(10), Retraite = Aujourdhui.AddDays(100) };
-        var e = Affichage.Calculer(d, Selecteur, Aujourdhui);
+        var e = Affichage.Calculer(d, Aujourdhui);
         Assert.Equal(Mode.Compte, e.Mode);
         Assert.InRange(e.Pourcentage, 0, 100);
     }

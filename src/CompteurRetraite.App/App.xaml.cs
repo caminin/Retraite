@@ -6,7 +6,6 @@ using CompteurRetraite.App.Reglages;
 using CompteurRetraite.App.Systeme;
 using CompteurRetraite.Core;
 using CompteurRetraite.Core.MiseAJour;
-using CompteurRetraite.Core.Phrases;
 
 namespace CompteurRetraite.App;
 
@@ -17,7 +16,6 @@ public partial class App : System.Windows.Application
     public Donnees Donnees { get; private set; } = null!;
     public StockageDonnees Stockage { get; private set; } = null!;
 
-    private SelecteurPhrase _selecteur = null!;
     private InstanceUnique? _instance;
     private IconeNotification? _icone;
     private Rafraichisseur? _rafraichisseur;
@@ -133,7 +131,6 @@ public partial class App : System.Windows.Application
             Installeur.InscrireDemarrage();
             Installeur.NoterVersionCourante();
         }
-        _selecteur = new SelecteurPhrase(BanquePhrases.Charger());
         _miseAJour = new ServiceMiseAJour(Dispatcher, () => _reglages is null, () => Quitter(relancer: true));
 
         CreerFenetre();
@@ -157,7 +154,7 @@ public partial class App : System.Windows.Application
     public void Rafraichir()
     {
         if (_fenetre is null || _icone is null) return;
-        var etat = Affichage.Calculer(Donnees, _selecteur, DateOnly.FromDateTime(DateTime.Now));
+        var etat = Affichage.Calculer(Donnees, DateOnly.FromDateTime(DateTime.Now));
         Enregistrer();
 
         if (Donnees.CompteurMasque) _fenetre.Hide();
@@ -167,7 +164,7 @@ public partial class App : System.Windows.Application
             _fenetre.Afficher(etat, Donnees.Apparence);
         }
 
-        string infobulle = etat.Mode == Mode.Compte ? $"{etat.Chiffre} {etat.Libelle}" : etat.Phrase;
+        string infobulle = etat.Mode == Mode.Compte ? $"{etat.Chiffre} {etat.Libelle}" : etat.Message;
         _icone.MettreAJour(infobulle, Donnees.CompteurMasque);
     }
 

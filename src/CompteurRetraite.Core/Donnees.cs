@@ -11,7 +11,6 @@ public sealed class Donnees
     /// <summary>Corrections manuelles : jour → travaillé ?</summary>
     public Dictionary<DateOnly, bool> Corrections { get; set; } = [];
     public Apparence Apparence { get; set; } = new();
-    public EtatPhrases Phrases { get; set; } = new();
     public bool CompteurMasque { get; set; }
 
     public CalendrierTravail Calendrier() => new(Regles, Corrections);
