@@ -15,3 +15,14 @@ Cochez chaque ligne. Si quelque chose ne va pas, notez la version de Windows : P
 - [ ] Les 4 coins (réglages > Apparence) : le texte se place dans le bon coin, aligné du bon côté, sans passer sous la barre des tâches.
 - [ ] Les 3 tailles changent bien la taille du texte.
 - [ ] La phrase du jour s'affiche au-dessus du chiffre ; une barre de progression et le pourcentage sont en dessous.
+
+## Icône, rafraîchissement, robustesse
+
+- [ ] Une icône bleue (petit sablier) est visible près de l'horloge, éventuellement dans la flèche « ^ ». Survolez-la : le nombre de jours s'affiche.
+- [ ] Clic droit sur l'icône : le menu propose « Réglages… », « Masquer le compteur » et « Quitter ». « Masquer » fait disparaître le compteur du bureau, puis le menu propose « Afficher le compteur ».
+- [ ] Un double-clic sur l'icône ouvre les réglages.
+- [ ] **Passage de minuit** : réglez l'horloge de Windows à 23:59 (Paramètres > Heure et langue), attendez 1 minute : le chiffre et la phrase changent. Remettez ensuite l'heure automatique.
+- [ ] **Veille** : mettez le PC en veille le soir et réveillez-le le lendemain : le chiffre est celui du jour.
+- [ ] **Redémarrage de l'Explorateur** : Gestionnaire des tâches > « Explorateur Windows » > Redémarrer. Le compteur revient au bout de quelques secondes, et l'icône aussi.
+- [ ] **Relancer le programme** alors qu'il tourne déjà : ça ouvre les réglages, sans second compteur.
+- [ ] Après un changement de résolution ou le branchement d'un écran, le compteur reste dans son coin sur l'écran principal.
