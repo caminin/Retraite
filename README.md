@@ -51,7 +51,15 @@ tools/vm/vm.sh demarrer            # 1re fois : téléchargement + installation 
 
 - L'écran de Windows s'affiche dans le navigateur : <http://localhost:8006>.
 - Le dossier `publish/` du projet apparaît dans Windows sous le nom **Shared**, sur le bureau (lecteur `Z:`). Après `scripts/publier.sh`, le nouvel exe y est donc directement.
-- Le compte Windows est `Docker`, mot de passe `admin` (valeurs par défaut de dockur, pour cette VM de test uniquement).
+- La VM est un Windows 11 Pro 25H2 non activé (filigrane), en français, avec un **clavier US**. Le visualiseur web envoie du QWERTY, et un clavier AZERTY dans Windows inverserait les touches.
+- Le compte Windows est `Docker`, mot de passe `admin` (valeurs par défaut de dockur, pour cette VM de test uniquement). Un accès SSH par clé est installé automatiquement ; la clé est rangée dans `~/VMs/compteur-retraite-ssh`.
+- Commandes utiles :
+
+  | Commande | Effet |
+  |---|---|
+  | `tools/vm/vm.sh installer-exe` | Copie `publish/CompteurRetraite.exe` dans Téléchargements et le lance, comme un double-clic. |
+  | `tools/vm/vm.sh ssh '<commande PowerShell>'` | Exécute une commande dans Windows, par exemple pour lire `$env:LOCALAPPDATA\CompteurRetraite\journal.txt`. |
+  | `tools/vm/vm.sh diag` | Liste les fenêtres du bureau et celles du compteur, pour comprendre un problème d'affichage. |
 - Le disque de la VM (environ 20 Go) est dans `~/VMs/compteur-retraite`, hors du projet.
 - `tools/vm/vm.sh arreter` arrête Windows proprement, `tools/vm/vm.sh etat` affiche son état.
 
