@@ -26,3 +26,18 @@ Cochez chaque ligne. Si quelque chose ne va pas, notez la version de Windows : P
 - [ ] **Redémarrage de l'Explorateur** : Gestionnaire des tâches > « Explorateur Windows » > Redémarrer. Le compteur revient au bout de quelques secondes, et l'icône aussi.
 - [ ] **Relancer le programme** alors qu'il tourne déjà : ça ouvre les réglages, sans second compteur.
 - [ ] Après un changement de résolution ou le branchement d'un écran, le compteur reste dans son coin sur l'écran principal.
+
+## Écran de réglage
+
+- [ ] La fenêtre est lisible, avec de gros caractères ; tout tient sans défilement horizontal.
+- [ ] Changez le **prénom** : la phrase du bureau l'utilise (certaines phrases seulement), et le titre de bienvenue aussi.
+- [ ] Choisissez la **date de retraite** dans le calendrier déroulant : le résumé « Il reste … jours travaillés » et le bureau se mettent à jour tout de suite.
+- [ ] Sans date de retraite, le calendrier et les actions en lot sont grisés, et le bureau invite à ouvrir les réglages.
+- [ ] Dans le calendrier, les **week-ends** sont gris et non cliquables, les **jours fériés** orange, les **jours passés** pâles et non cliquables, et **aujourd'hui** est entouré.
+- [ ] Un clic sur un jour travaillé le passe en bleu (non travaillé) et le chiffre baisse de 1. Un second clic l'annule.
+- [ ] Un clic sur un jour férié le rend travaillé (blanc) et le chiffre augmente de 1.
+- [ ] **Action en lot** « Je ne travaille plus le mercredi » : la confirmation annonce le nombre de mercredis, tous les mercredis à venir passent en bleu, et le message « C'est fait » s'affiche.
+- [ ] Un mercredi peut ensuite être remis en travaillé d'un clic.
+- [ ] « Je travaille de nouveau le mercredi » remet les mercredis à venir en blanc.
+- [ ] Les choix **Position**, **Taille** et **Couleur** s'appliquent aussitôt sur le bureau.
+- [ ] Fermez puis rouvrez les réglages : tout est conservé. Redémarrez le PC : tout est conservé.

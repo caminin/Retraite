@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Threading;
 using CompteurRetraite.App.Bureau;
+using CompteurRetraite.App.Reglages;
 using CompteurRetraite.App.Systeme;
 using CompteurRetraite.Core;
 using CompteurRetraite.Core.MiseAJour;
@@ -21,6 +22,7 @@ public partial class App : System.Windows.Application
     private IconeNotification? _icone;
     private Rafraichisseur? _rafraichisseur;
     private FenetreCompteur? _fenetre;
+    private FenetreReglages? _reglages;
     private HwndSource? _ecouteurBarre;
     private bool _arretEnCours;
 
@@ -93,7 +95,24 @@ public partial class App : System.Windows.Application
 
     public void OuvrirReglages(bool bienvenue)
     {
-        // Tâche 11.
+        if (_reglages is null)
+        {
+            _reglages = new FenetreReglages(bienvenue);
+            _reglages.Closed += (_, _) => _reglages = null;
+            _reglages.Show();
+        }
+        if (_reglages.WindowState == WindowState.Minimized) _reglages.WindowState = WindowState.Normal;
+        // Astuce pour passer au premier plan quand la demande vient d'un autre processus.
+        _reglages.Topmost = true;
+        _reglages.Activate();
+        _reglages.Topmost = false;
+    }
+
+    public bool ReglagesOuverts => _reglages is not null;
+
+    public void Desinstaller()
+    {
+        // Tâche 12.
     }
 
     public void Quitter()
@@ -102,6 +121,7 @@ public partial class App : System.Windows.Application
         _rafraichisseur?.Dispose();
         _icone?.Dispose();
         _ecouteurBarre?.Dispose();
+        _reglages?.Close();
         _fenetre?.Close();
         _instance?.Dispose();
         Shutdown();

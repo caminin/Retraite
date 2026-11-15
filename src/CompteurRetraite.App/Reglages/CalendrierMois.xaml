@@ -1,0 +1,19 @@
+<UserControl x:Class="CompteurRetraite.App.Reglages.CalendrierMois"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <DockPanel Margin="0,0,0,12" LastChildFill="True">
+            <Button x:Name="BoutonPrecedent" DockPanel.Dock="Left" Style="{StaticResource Bouton}" Content="◀" Width="48"
+                    ToolTip="Mois précédent" Click="Precedent_Click" />
+            <Button x:Name="BoutonAujourdhui" DockPanel.Dock="Right" Style="{StaticResource Bouton}" Content="Aujourd'hui"
+                    Margin="8,0,0,0" Click="Aujourdhui_Click" />
+            <Button x:Name="BoutonSuivant" DockPanel.Dock="Right" Style="{StaticResource Bouton}" Content="▶" Width="48"
+                    ToolTip="Mois suivant" Click="Suivant_Click" />
+            <TextBlock x:Name="TitreMois" FontSize="22" FontWeight="SemiBold" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+        </DockPanel>
+        <UniformGrid x:Name="EnTetes" Columns="7" Margin="0,0,0,4" />
+        <UniformGrid x:Name="Grille" Columns="7" Rows="6" />
+        <WrapPanel x:Name="Legende" Margin="0,14,0,0" />
+    </StackPanel>
+</UserControl>
