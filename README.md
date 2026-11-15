@@ -34,9 +34,11 @@ Puis :
 ```bash
 export PATH="$HOME/.dotnet:$PATH"
 dotnet test
-scripts/publier.sh                      # produit publish/CompteurRetraite.exe, sans mise à jour automatique
-scripts/publier.sh proprietaire/depot   # même chose, avec la mise à jour automatique depuis ce dépôt
+scripts/publier.sh 0.2.0                      # produit publish/CompteurRetraite.exe en version 0.2.0
+scripts/publier.sh 0.2.0 proprietaire/depot   # même chose, avec la mise à jour automatique depuis ce dépôt
 ```
+
+**Numéro de version :** un exe donné à la main ne remplace celui déjà installé que si sa version est **plus grande**. Avec la même version, il ouvre seulement les réglages. Augmentez donc le numéro à chaque livraison : 0.2.0, 0.3.0…
 
 Sous Windows, `CompteurRetraite.exe --sans-installation` lance le compteur sans l'installer, ce qui est pratique pour essayer.
 
@@ -61,7 +63,7 @@ git push origin v0.2.0
 
 GitHub lance les tests, compile l'exe et crée une release qui contient `CompteurRetraite.exe` (`.github/workflows/release.yml`). Les compteurs déjà installés la récupèrent d'eux-mêmes, au plus tard 24 heures après, ou à l'ouverture de session suivante.
 
-**Important :** seuls les exe qui connaissent l'adresse du dépôt savent se mettre à jour, c'est-à-dire ceux produits par une release GitHub ou par `scripts/publier.sh proprietaire/depot`. Le **premier** exe à donner à Jean-Philippe doit donc venir d'une release GitHub.
+**Important :** seuls les exe qui connaissent l'adresse du dépôt savent se mettre à jour, c'est-à-dire ceux produits par une release GitHub ou par `scripts/publier.sh <version> proprietaire/depot`. Le **premier** exe à donner à Jean-Philippe doit donc venir d'une release GitHub.
 
 ## Installer chez Jean-Philippe
 

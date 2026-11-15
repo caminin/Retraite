@@ -82,6 +82,8 @@ public partial class App : System.Windows.Application
         }
     }
 
+    private bool _demarre;
+
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -89,8 +91,24 @@ public partial class App : System.Windows.Application
         {
             Journal.Ecrire($"Erreur inattendue : {ex.Exception}");
             ex.Handled = true;
+            // Pendant le démarrage, mieux vaut s'arrêter que rester invisible sans rien faire.
+            if (!_demarre) Quitter();
         };
 
+        try
+        {
+            Demarrer(e);
+            _demarre = true;
+        }
+        catch (Exception ex)
+        {
+            Journal.Ecrire($"Démarrage impossible : {ex}");
+            Quitter();
+        }
+    }
+
+    private void Demarrer(StartupEventArgs e)
+    {
         bool sansInstallation = e.Args.Contains("--sans-installation");
         if (!sansInstallation && !GererLancement())
         {
@@ -164,10 +182,18 @@ public partial class App : System.Windows.Application
 
     public void OuvrirReglages(bool bienvenue)
     {
+        if (Donnees is null) return; // démarrage pas terminé
         if (_reglages is null)
         {
             _reglages = new FenetreReglages(bienvenue);
-            _reglages.Closed += (_, _) => _reglages = null;
+            _reglages.Closed += (_, _) =>
+            {
+                _reglages = null;
+                // Une mise à jour téléchargée pendant que les réglages étaient ouverts : on l'installe maintenant.
+                if (File.Exists(ServiceMiseAJour.FichierNouveau) && Environment.ProcessPath is { } exe
+                    && Installeur.EstLanceDepuisInstallation(exe))
+                    Quitter(relancer: true);
+            };
             _reglages.Show();
         }
         if (_reglages.WindowState == WindowState.Minimized) _reglages.WindowState = WindowState.Normal;

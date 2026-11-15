@@ -19,15 +19,16 @@ internal static class AttacheBureau
         SendMessageTimeout(progman, 0x052C, new IntPtr(0xD), new IntPtr(1), SMTO_NORMAL, 1000, out _);
         SendMessageTimeout(progman, 0x052C, IntPtr.Zero, IntPtr.Zero, SMTO_NORMAL, 1000, out _);
 
-        // 24H2 et suivantes.
+        // 24H2 et suivantes : après le message ci-dessus, les icônes (SHELLDLL_DefView) restent sous Progman,
+        // à côté du WorkerW du fond d'écran. Avant 24H2, elles sont déplacées dans un WorkerW séparé.
         var workerEnfant = FindWindowEx(progman, IntPtr.Zero, "WorkerW", null);
-        if (workerEnfant != IntPtr.Zero)
+        var iconesSousProgman = FindWindowEx(progman, IntPtr.Zero, "SHELLDLL_DefView", null);
+        if (workerEnfant != IntPtr.Zero || iconesSousProgman != IntPtr.Zero)
         {
             SetParent(hwnd, progman);
-            var icones = FindWindowEx(progman, IntPtr.Zero, "SHELLDLL_DefView", null);
             // Placée juste sous la vue des icônes, donc au-dessus du fond d'écran.
-            SetWindowPos(hwnd, icones != IntPtr.Zero ? icones : IntPtr.Zero, 0, 0, 0, 0,
-                         SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+            // Pas de SWP_SHOWWINDOW : c'est WPF qui décide si le compteur est visible (option « Masquer »).
+            SetWindowPos(hwnd, iconesSousProgman, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
             return progman;
         }
 
@@ -46,7 +47,7 @@ internal static class AttacheBureau
         if (workerFond != IntPtr.Zero)
         {
             SetParent(hwnd, workerFond);
-            SetWindowPos(hwnd, IntPtr.Zero, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+            SetWindowPos(hwnd, IntPtr.Zero, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
             return workerFond;
         }
 

@@ -130,31 +130,45 @@ public partial class FenetreReglages : Window
     private void NeTravaillePlus_Click(object sender, RoutedEventArgs e)
     {
         if (Donnees.Retraite is not { } retraite || ChoixJourOff.SelectedItem is not ComboBoxItem { Tag: DayOfWeek jour }) return;
-        int n = Donnees.Calendrier().CompterJoursSemaine(jour, Aujourdhui, retraite);
+        // Aperçu sur une copie : le nombre annoncé est exactement celui qui sera appliqué.
+        int n = Donnees.Calendrier().Copie().NeTravaillePlus(jour, Aujourdhui, retraite);
+        if (n == 0)
+        {
+            ResultatLot.Text = $"Les {Pluriel(jour)} à venir sont déjà tous non travaillés.";
+            return;
+        }
         var reponse = MessageBox.Show(this,
-            $"Les {Pluriel(jour)} à venir ({n}) seront marqués comme non travaillés, jusqu'à la retraite.\n\n" +
+            $"{Majuscule(Libelles.JoursSemaine(n, jour))} à venir {(n > 1 ? "seront marqués" : "sera marqué")} comme non travaillé{(n > 1 ? "s" : "")}, jusqu'à la retraite.\n\n" +
             "Vous pourrez ensuite remettre un jour travaillé en cliquant dessus dans le calendrier.",
             "Confirmer", MessageBoxButton.OKCancel, MessageBoxImage.Question);
         if (reponse != MessageBoxResult.OK) return;
 
         int changes = Donnees.Calendrier().NeTravaillePlus(jour, Aujourdhui, retraite);
-        ResultatLot.Text = $"C'est fait : {changes} {Pluriel(jour)} en moins à travailler.";
+        ResultatLot.Text = $"C'est fait : {Libelles.JoursSemaine(changes, jour)} en moins à travailler.";
         Modifie();
     }
 
     private void TravailleDeNouveau_Click(object sender, RoutedEventArgs e)
     {
         if (Donnees.Retraite is not { } retraite || ChoixJourOn.SelectedItem is not ComboBoxItem { Tag: DayOfWeek jour }) return;
+        int n = Donnees.Calendrier().Copie().TravailleDeNouveau(jour, Aujourdhui, retraite);
+        if (n == 0)
+        {
+            ResultatLot.Text = $"Les {Pluriel(jour)} à venir sont déjà travaillés (hors jours fériés).";
+            return;
+        }
         var reponse = MessageBox.Show(this,
-            $"Les {Pluriel(jour)} à venir redeviendront des jours travaillés (sauf les jours fériés).\n\n" +
+            $"{Majuscule(Libelles.JoursSemaine(n, jour))} à venir {(n > 1 ? "redeviendront travaillés" : "redeviendra travaillé")}.\n\n" +
             "Les changements faits à la main sur ces jours seront effacés.",
             "Confirmer", MessageBoxButton.OKCancel, MessageBoxImage.Question);
         if (reponse != MessageBoxResult.OK) return;
 
         int changes = Donnees.Calendrier().TravailleDeNouveau(jour, Aujourdhui, retraite);
-        ResultatLot.Text = $"C'est fait : {changes} {Pluriel(jour)} redeviennent travaillés.";
+        ResultatLot.Text = $"C'est fait : {Libelles.JoursSemaine(changes, jour)} de nouveau à travailler.";
         Modifie();
     }
+
+    private static string Majuscule(string texte) => texte.Length == 0 ? texte : char.ToUpper(texte[0], Fr) + texte[1..];
 
     private void Desinstaller_Click(object sender, RoutedEventArgs e)
     {

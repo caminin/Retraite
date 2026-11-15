@@ -150,3 +150,35 @@ public class CalendrierTravailTests
         Assert.Equal(2, c.CompterJoursSemaine(DayOfWeek.Wednesday, Aujourdhui, D(11, 30)));
     }
 }
+
+public class ApercuLotTests
+{
+    private static readonly DateOnly Aujourdhui = new(2026, 11, 16);
+    private static readonly DateOnly Retraite = new(2031, 6, 30);
+
+    [Fact]
+    public void Copie_n_affecte_pas_l_original()
+    {
+        var regles = new List<RegleLot>();
+        var c = new CalendrierTravail(regles, []);
+        c.Copie().NeTravaillePlus(DayOfWeek.Wednesday, Aujourdhui, Retraite);
+        Assert.Empty(regles);
+    }
+
+    [Fact]
+    public void Apercu_d_une_seconde_application_annonce_zero()
+    {
+        var c = new CalendrierTravail([], []);
+        int annonce = c.Copie().NeTravaillePlus(DayOfWeek.Wednesday, Aujourdhui, Retraite);
+        Assert.Equal(annonce, c.NeTravaillePlus(DayOfWeek.Wednesday, Aujourdhui, Retraite));
+        Assert.Equal(0, c.Copie().NeTravaillePlus(DayOfWeek.Wednesday, Aujourdhui, Retraite));
+    }
+
+    [Theory]
+    [InlineData(0, DayOfWeek.Wednesday, "0 mercredi")]
+    [InlineData(1, DayOfWeek.Wednesday, "1 mercredi")]
+    [InlineData(245, DayOfWeek.Wednesday, "245 mercredis")]
+    [InlineData(1200, DayOfWeek.Monday, "1 200 lundis")]
+    public void Nombre_de_jours_accorde_en_francais(int n, DayOfWeek jour, string attendu)
+        => Assert.Equal(attendu, Libelles.JoursSemaine(n, jour).Replace(' ', ' ').Replace(' ', ' '));
+}

@@ -18,6 +18,9 @@ public sealed class CalendrierTravail(List<RegleLot> regles, Dictionary<DateOnly
         return StatutSansCorrection(jour);
     }
 
+    /// <summary>Copie indépendante, pour prévisualiser une action sans rien modifier.</summary>
+    public CalendrierTravail Copie() => new(new List<RegleLot>(regles), new Dictionary<DateOnly, bool>(corrections));
+
     public bool EstTravaille(DateOnly jour) => Statut(jour) is TypeJour.Travaille or TypeJour.TravailleManuel;
 
     /// <summary>Inverse le statut d'un jour. Renvoie false (sans rien changer) pour un week-end.</summary>
