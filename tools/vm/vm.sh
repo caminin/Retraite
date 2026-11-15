@@ -10,6 +10,8 @@
 #   tools/vm/vm.sh taper <texte>
 #                             tape du texte dans le champ qui a le focus (syntaxe SendKeys : {TAB}, {ENTER}…)
 #   tools/vm/vm.sh diag      liste les fenêtres du bureau et du compteur (dans la session visible)
+#   tools/vm/vm.sh capture <nom> [dossier]
+#                             capture l'écran de Windows en PNG (par défaut dans docs/captures/)
 #   tools/vm/vm.sh installer-exe
 #                             copie publish/CompteurRetraite.exe dans Téléchargements puis le lance
 # L'écran de Windows est sur http://localhost:8006
@@ -48,8 +50,11 @@ lancer_vm() {
   [ -n "$args" ] && avecArgs="-Argument '$args'"
   ps_vm "\$a = New-ScheduledTaskAction -Execute '$exe' $avecArgs
 \$p = New-ScheduledTaskPrincipal -UserId \$env:USERNAME -LogonType Interactive -RunLevel Limited
-Register-ScheduledTask -TaskName CompteurTest -Action \$a -Principal \$p -Force | Out-Null
-Start-ScheduledTask -TaskName CompteurTest
+# Nom unique : une tâche qui a lancé le compteur reste « en cours » et refuserait un nouveau lancement.
+\$nom = 'CompteurTest-' + [guid]::NewGuid().ToString('N').Substring(0, 8)
+Get-ScheduledTask -TaskName 'CompteurTest*' -ErrorAction SilentlyContinue | Where-Object State -ne 'Running' | Unregister-ScheduledTask -Confirm:\$false
+Register-ScheduledTask -TaskName \$nom -Action \$a -Principal \$p -Force | Out-Null
+Start-ScheduledTask -TaskName \$nom
 Write-Output 'Lancé : $exe $args'"
 }
 
@@ -65,10 +70,15 @@ case "${1:-etat}" in
              lancer_vm powershell.exe '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File C:\Users\Public\diag-fenetres.ps1' >/dev/null
              sleep 8
              ssh_vm 'Get-Content C:\Users\Public\diag.txt' ;;
+  capture)  nom="${2:-capture}"; dossier="${3:-../../docs/captures}"; mkdir -p "$dossier"
+             scp_vm scripts/capture.ps1 Docker@127.0.0.1:C:/Users/Public/capture.ps1
+             lancer_vm conhost.exe "--headless powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\\Users\\Public\\capture.ps1 -Nom $nom" >/dev/null
+             sleep 6
+             scp_vm "Docker@127.0.0.1:C:/Users/Public/captures/$nom.png" "$dossier/$nom.png" && echo "$dossier/$nom.png" ;;
   installer-exe)
              # Envoie publish/CompteurRetraite.exe dans Téléchargements (par SSH, plus fiable que le dossier partagé),
              # puis le lance dans la session visible, comme un double-clic.
              scp_vm ../../publish/CompteurRetraite.exe Docker@127.0.0.1:C:/Users/Docker/Downloads/CompteurRetraite.exe
              lancer_vm 'C:\Users\Docker\Downloads\CompteurRetraite.exe' ;;
-  *) echo "Usage : $0 demarrer|arreter|etat|supprimer|ssh|lancer|taper|diag|installer-exe"; exit 1 ;;
+  *) echo "Usage : $0 demarrer|arreter|etat|supprimer|ssh|lancer|taper|diag|capture|installer-exe"; exit 1 ;;
 esac
