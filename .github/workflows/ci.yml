@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Tests
+        run: dotnet test CompteurRetraite.sln -c Release
+      - name: Publication
+        run: >
+          dotnet publish src/CompteurRetraite.App -c Release -r win-x64 --self-contained
+          -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true -o publish
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CompteurRetraite
+          path: publish/CompteurRetraite.exe

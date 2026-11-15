@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>CompteurRetraite</AssemblyName>
+    <RootNamespace>CompteurRetraite.App</RootNamespace>
+    <Product>Compteur retraite</Product>
+  </PropertyGroup>
+  <ItemGroup>
+    <AssemblyMetadata Include="DepotGitHub" Value="$(DepotGitHub)" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CompteurRetraite.Core\CompteurRetraite.Core.csproj" />
+  </ItemGroup>
+</Project>
