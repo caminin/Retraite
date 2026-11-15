@@ -26,7 +26,19 @@ public partial class FenetreCompteur : Window
             Rattacher();
         };
         SizeChanged += (_, _) => Positionner();
+
+        // Quand le bureau passe au premier plan (clic sur le bureau, « Afficher le bureau », Win+D),
+        // Windows le remonte par-dessus le compteur : on se replace juste au-dessus de lui.
+        _surPremierPlan = (_, _, _, _, _, _, _) =>
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, Rattacher);
+        _crochet = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, _surPremierPlan, 0, 0,
+                                   WINEVENT_OUTOFCONTEXT | WINEVENT_SKIPOWNPROCESS);
+        Closed += (_, _) => { if (_crochet != IntPtr.Zero) UnhookWinEvent(_crochet); };
     }
+
+    // Gardé en champ : le délégué ne doit pas être ramassé par le GC tant que le crochet existe.
+    private readonly WinEventProc _surPremierPlan;
+    private readonly IntPtr _crochet;
 
     private IntPtr Handle => new WindowInteropHelper(this).Handle;
 

@@ -5,10 +5,10 @@ services:
     image: dockurr/windows
     container_name: compteur-windows
     environment:
-      VERSION: "11l"          # Windows 11 IoT Enterprise LTSC 2024 (évaluation), base 24H2, sans TPM
+      VERSION: "11"           # Windows 11 Pro, sans activation (filigrane), pas d'expiration
       LANGUAGE: "French"
       REGION: "fr-FR"
-      KEYBOARD: "fr-FR"
+      KEYBOARD: "en-US"       # le visualiseur web envoie du QWERTY : un clavier US évite les touches inversées
       RAM_SIZE: "4G"
       CPU_CORES: "4"
       DISK_SIZE: "40G"
@@ -21,8 +21,10 @@ services:
       - 127.0.0.1:8006:8006   # écran de la VM dans le navigateur : http://localhost:8006
       - 127.0.0.1:3389:3389/tcp
       - 127.0.0.1:3389:3389/udp
+      - 127.0.0.1:2222:22       # SSH par clé (tools/vm/vm.sh ssh)
     volumes:
       - ${HOME}/VMs/compteur-retraite:/storage   # disque de la VM, hors du projet
       - ../../publish:/shared                    # dossier « Shared » sur le bureau de Windows (lecteur Z:)
+      - ${HOME}/VMs/compteur-retraite-oem:/oem    # script de fin d'installation + clé SSH publique (préparé par vm.sh)
     restart: "no"
     stop_grace_period: 2m

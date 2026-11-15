@@ -27,6 +27,11 @@ internal static class Win32
     [DllImport("user32.dll")]
     public static extern IntPtr GetParent(IntPtr hwnd);
 
+    public const uint GW_HWNDPREV = 3;
+
+    [DllImport("user32.dll")]
+    public static extern IntPtr GetWindow(IntPtr hwnd, uint cmd);
+
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static extern bool EnumWindows(EnumWindowsProc callback, IntPtr lParam);
@@ -49,4 +54,17 @@ internal static class Win32
 
     [StructLayout(LayoutKind.Sequential)]
     public struct POINT { public int X, Y; }
+
+    // Suivi du premier plan : pour se replacer quand le bureau est affiché (bouton « Afficher le bureau », Win+D).
+    public const uint EVENT_SYSTEM_FOREGROUND = 0x0003, EVENT_SYSTEM_MINIMIZEEND = 0x0017;
+    public const uint WINEVENT_OUTOFCONTEXT = 0x0000, WINEVENT_SKIPOWNPROCESS = 0x0002;
+
+    public delegate void WinEventProc(IntPtr hook, uint evt, IntPtr hwnd, int idObject, int idChild, uint thread, uint time);
+
+    [DllImport("user32.dll")]
+    public static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr module, WinEventProc proc, uint pid, uint thread, uint flags);
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool UnhookWinEvent(IntPtr hook);
 }

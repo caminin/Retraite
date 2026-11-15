@@ -7,6 +7,7 @@
     <AssemblyName>CompteurRetraite</AssemblyName>
     <RootNamespace>CompteurRetraite.App</RootNamespace>
     <Product>Compteur retraite</Product>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <AssemblyMetadata Include="DepotGitHub" Value="$(DepotGitHub)" />
