@@ -24,7 +24,63 @@ public partial class App : System.Windows.Application
     private FenetreCompteur? _fenetre;
     private FenetreReglages? _reglages;
     private HwndSource? _ecouteurBarre;
+    private ServiceMiseAJour? _miseAJour;
     private bool _arretEnCours;
+
+    /// <summary>
+    /// Installe, met à jour ou passe la main selon d'où l'exe est lancé.
+    /// Renvoie true si c'est cette instance qui doit afficher le compteur.
+    /// </summary>
+    private static bool GererLancement()
+    {
+        if (Environment.ProcessPath is not { } exe) return true;
+        string installe = Installeur.ExeInstalle;
+        bool depuisInstallation = Installeur.EstLanceDepuisInstallation(exe);
+
+        // Une mise à jour téléchargée attend : on l'installe avant tout, puis on relance la nouvelle version.
+        if (depuisInstallation && ServiceMiseAJour.AppliquerEnAttente())
+        {
+            Installeur.Lancer(installe);
+            return false;
+        }
+
+        var action = DecisionLancement.Decider(
+            depuisInstallation ? installe : exe, installe, File.Exists(installe),
+            Installeur.VersionCourante, Installeur.VersionInstallee(), InstanceUnique.InstanceEnCours());
+
+        switch (action)
+        {
+            case ActionLancement.Installer:
+                Installeur.Installer(exe);
+                Installeur.Lancer(installe, "--bienvenue");
+                return false;
+
+            case ActionLancement.RemplacerEtRelancer:
+                if (InstanceUnique.InstanceEnCours())
+                {
+                    InstanceUnique.Envoyer("QUITTER");
+                    InstanceUnique.AttendreFin(TimeSpan.FromSeconds(5));
+                }
+                Directory.CreateDirectory(Installeur.DossierProgramme);
+                string nouveau = installe + ".new";
+                File.Copy(exe, nouveau, overwrite: true);
+                Installeur.RetirerMarqueInternet(nouveau);
+                if (!File.Exists(installe)) File.Move(nouveau, installe);
+                else if (!RemplacementExe.Remplacer(installe, nouveau)) Journal.Ecrire("Remplacement manuel impossible.");
+                Installeur.InscrireDemarrage();
+                Installeur.Lancer(installe);
+                return false;
+
+            case ActionLancement.SignalerInstanceEnCours:
+                InstanceUnique.Envoyer("REGLAGES");
+                return false;
+
+            default: // Demarrer
+                if (depuisInstallation) return true;
+                Installeur.Lancer(installe);
+                return false;
+        }
+    }
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -34,6 +90,13 @@ public partial class App : System.Windows.Application
             Journal.Ecrire($"Erreur inattendue : {ex.Exception}");
             ex.Handled = true;
         };
+
+        bool sansInstallation = e.Args.Contains("--sans-installation");
+        if (!sansInstallation && !GererLancement())
+        {
+            Quitter();
+            return;
+        }
 
         _instance = new InstanceUnique();
         if (!_instance.EstPremiere)
@@ -47,7 +110,13 @@ public partial class App : System.Windows.Application
         Stockage = new StockageDonnees(StockageDonnees.DossierParDefaut());
         Donnees = Stockage.Charger(DateOnly.FromDateTime(DateTime.Now));
         if (Environment.ProcessPath is { } exe) RemplacementExe.Nettoyer(exe);
+        if (!sansInstallation)
+        {
+            Installeur.InscrireDemarrage();
+            Installeur.NoterVersionCourante();
+        }
         _selecteur = new SelecteurPhrase(BanquePhrases.Charger());
+        _miseAJour = new ServiceMiseAJour(Dispatcher, () => _reglages is null, () => Quitter(relancer: true));
 
         CreerFenetre();
         _icone = new IconeNotification();
@@ -57,7 +126,7 @@ public partial class App : System.Windows.Application
             Donnees.CompteurMasque = !Donnees.CompteurMasque;
             Rafraichir();
         };
-        _icone.QuitterDemande += Quitter;
+        _icone.QuitterDemande += () => Quitter();
 
         _rafraichisseur = new Rafraichisseur(Dispatcher, Rafraichir, () => _fenetre?.Rattacher());
         EcouterRedemarrageExplorateur();
@@ -112,18 +181,23 @@ public partial class App : System.Windows.Application
 
     public void Desinstaller()
     {
-        // Tâche 12.
+        Installeur.Desinstaller();
+        Quitter();
     }
 
-    public void Quitter()
+    /// <summary>Ferme proprement. Avec <paramref name="relancer"/>, installe la mise à jour téléchargée et lance la nouvelle version.</summary>
+    public void Quitter(bool relancer = false)
     {
+        if (_arretEnCours) return;
         _arretEnCours = true;
+        _miseAJour?.Dispose();
         _rafraichisseur?.Dispose();
         _icone?.Dispose();
         _ecouteurBarre?.Dispose();
         _reglages?.Close();
         _fenetre?.Close();
-        _instance?.Dispose();
+        _instance?.Dispose(); // libère le verrou d'instance avant de relancer
+        if (relancer && ServiceMiseAJour.AppliquerEnAttente()) Installeur.Lancer(Installeur.ExeInstalle);
         Shutdown();
     }
 

@@ -41,3 +41,33 @@ Cochez chaque ligne. Si quelque chose ne va pas, notez la version de Windows : P
 - [ ] « Je travaille de nouveau le mercredi » remet les mercredis à venir en blanc.
 - [ ] Les choix **Position**, **Taille** et **Couleur** s'appliquent aussitôt sur le bureau.
 - [ ] Fermez puis rouvrez les réglages : tout est conservé. Redémarrez le PC : tout est conservé.
+
+## Installation
+
+- [ ] **Contrôle intelligent des applications** : Sécurité Windows > Contrôle des applications et du navigateur > Contrôle intelligent des applications. S'il est « Activé », Windows bloquera le programme : il faut le passer sur « Désactivé ». Attention, ce choix est définitif.
+- [ ] Téléchargez `CompteurRetraite.exe` et double-cliquez dessus depuis Téléchargements. Si l'écran bleu « Windows a protégé votre ordinateur » apparaît, cliquez sur « Informations complémentaires » puis « Exécuter quand même ».
+- [ ] La fenêtre **Bienvenue, Jean-Philippe !** s'ouvre, et le compteur apparaît sur le bureau dès que la date est saisie.
+- [ ] Le programme est copié dans `%LocalAppData%\Programs\CompteurRetraite\` (collez ce chemin dans la barre d'adresse de l'Explorateur).
+- [ ] **Fermez la session puis rouvrez-la** : le compteur revient seul, **sans aucune fenêtre d'avertissement**.
+- [ ] Relancez le fichier de Téléchargements : les réglages s'ouvrent, sans second compteur ni réinstallation.
+
+## Nouvelle version donnée à la main
+
+- [ ] Lancez un `CompteurRetraite.exe` de version plus récente : l'ancien compteur se ferme, le nouveau prend sa place, et **les réglages et vacances sont conservés**.
+
+## Mise à jour automatique (une fois le dépôt GitHub en place)
+
+- [ ] Installez une version issue d'une release GitHub, par exemple v0.1.0.
+- [ ] Publiez une version plus récente (v0.2.0, voir le README).
+- [ ] Relancez la session, ou attendez : 30 secondes après le démarrage, la nouvelle version est téléchargée, puis installée dès que la fenêtre de réglage est fermée. Le compteur disparaît une seconde puis revient.
+- [ ] Les réglages et vacances sont conservés.
+
+## Désinstallation
+
+- [ ] Réglages > « Désinstaller le compteur » > Oui : le compteur et l'icône disparaissent.
+- [ ] Après quelques secondes, les dossiers `%LocalAppData%\Programs\CompteurRetraite` et `%LocalAppData%\CompteurRetraite` n'existent plus.
+- [ ] Au redémarrage de la session, plus rien ne se lance.
+
+## En cas de souci
+
+Le fichier `%LocalAppData%\CompteurRetraite\journal.txt` contient les erreurs rencontrées. Il est utile à joindre à un signalement.
