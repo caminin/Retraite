@@ -4,9 +4,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <Version>0.1.0</Version>
+    <Version>0.3.0</Version>
     <Authors>Compteur retraite</Authors>
-    <!-- Dépôt GitHub "proprietaire/depot". Vide = mise à jour désactivée. -->
-    <DepotGitHub></DepotGitHub>
+    <!-- Dépôt GitHub public d'où viennent les mises à jour automatiques. Vide = mise à jour désactivée. -->
+    <DepotGitHub>caminin/Retraite</DepotGitHub>
   </PropertyGroup>
 </Project>

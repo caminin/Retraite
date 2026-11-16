@@ -32,8 +32,7 @@ Puis :
 ```bash
 export PATH="$HOME/.dotnet:$PATH"
 dotnet test
-scripts/publier.sh 0.2.0                      # produit publish/CompteurRetraite.exe en version 0.2.0
-scripts/publier.sh 0.2.0 proprietaire/depot   # même chose, avec la mise à jour automatique depuis ce dépôt
+scripts/publier.sh 0.3.1     # produit publish/CompteurRetraite.exe en version 0.3.1, qui se mettra à jour depuis caminin/Retraite
 ```
 
 **Numéro de version :** un exe donné à la main ne remplace celui déjà installé que si sa version est **plus grande**. Avec la même version, il ouvre seulement les réglages. Augmentez donc le numéro à chaque livraison : 0.2.0, 0.3.0…
@@ -63,17 +62,11 @@ tools/vm/vm.sh demarrer            # 1re fois : téléchargement + installation 
 - Le disque de la VM (environ 20 Go) est dans `~/VMs/compteur-retraite`, hors du projet.
 - `tools/vm/vm.sh arreter` arrête Windows proprement, `tools/vm/vm.sh etat` affiche son état.
 
-## Mettre le projet sur GitHub
+## Dépôt GitHub
 
-1. Créez un dépôt **public** sur GitHub. La mise à jour lit les releases sans mot de passe.
-2. Poussez le code :
+Le code est sur <https://github.com/caminin/Retraite>. Ce dépôt doit rester **public** : le compteur y lit les releases sans mot de passe.
 
-   ```bash
-   git remote add origin https://github.com/proprietaire/depot.git
-   git push -u origin main
-   ```
-
-3. À chaque envoi, GitHub compile et lance les tests sur Windows (`.github/workflows/ci.yml`).
+À chaque envoi, GitHub compile et lance les tests sur Windows (`.github/workflows/ci.yml`).
 
 ## Publier une version
 
@@ -84,11 +77,11 @@ git push origin v0.2.0
 
 GitHub lance les tests, compile l'exe et crée une release qui contient `CompteurRetraite.exe` (`.github/workflows/release.yml`). Les compteurs déjà installés la récupèrent d'eux-mêmes, au plus tard 24 heures après, ou à l'ouverture de session suivante.
 
-**Important :** seuls les exe qui connaissent l'adresse du dépôt savent se mettre à jour, c'est-à-dire ceux produits par une release GitHub ou par `scripts/publier.sh <version> proprietaire/depot`. Le **premier** exe à donner à Jean-Philippe doit donc venir d'une release GitHub.
+**Important :** seuls les exe à partir de la version 0.3.0 connaissent l'adresse du dépôt et savent se mettre à jour. Une version 0.2.x déjà installée doit être remplacée une fois à la main, par un exe téléchargé depuis les [releases](https://github.com/caminin/Retraite/releases).
 
 ## Installer chez Jean-Philippe
 
-1. Téléchargez `CompteurRetraite.exe` depuis la dernière release.
+1. Téléchargez `CompteurRetraite.exe` depuis la [dernière release](https://github.com/caminin/Retraite/releases/latest).
 2. Double-cliquez dessus. Si Windows affiche « Windows a protégé votre ordinateur », cliquez sur **Informations complémentaires** puis **Exécuter quand même**. Le programme n'est pas signé numériquement.
 3. La fenêtre de bienvenue s'ouvre : indiquez la date du premier jour de retraite. C'est fini.
 
