@@ -20,8 +20,10 @@ public sealed class TelechargeurMaj(HttpClient http)
             if (new FileInfo(destination).Length != v.Taille) return Echec(destination);
             if (v.Sha256 is not null)
             {
-                await using var lecture = File.OpenRead(destination);
-                string empreinte = Convert.ToHexStringLower(await SHA256.HashDataAsync(lecture, ct).ConfigureAwait(false));
+                string empreinte;
+                // Le fichier doit être fermé avant une éventuelle suppression : Windows refuse de supprimer un fichier ouvert.
+                await using (var lecture = File.OpenRead(destination))
+                    empreinte = Convert.ToHexStringLower(await SHA256.HashDataAsync(lecture, ct).ConfigureAwait(false));
                 if (!string.Equals(empreinte, v.Sha256, StringComparison.OrdinalIgnoreCase)) return Echec(destination);
             }
             return true;

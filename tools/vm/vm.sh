@@ -12,6 +12,8 @@
 #   tools/vm/vm.sh diag      liste les fenêtres du bureau et du compteur (dans la session visible)
 #   tools/vm/vm.sh capture <nom> [dossier]
 #                             capture l'écran de Windows en PNG (par défaut dans docs/captures/)
+#   tools/vm/vm.sh tests-windows
+#                             lance les tests automatiques sous Windows (code de l'arbre de travail actuel)
 #   tools/vm/vm.sh installer-exe
 #                             copie publish/CompteurRetraite.exe dans Téléchargements puis le lance
 # L'écran de Windows est sur http://localhost:8006
@@ -75,10 +77,22 @@ case "${1:-etat}" in
              lancer_vm conhost.exe "--headless powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\\Users\\Public\\capture.ps1 -Nom $nom" >/dev/null
              sleep 6
              scp_vm "Docker@127.0.0.1:C:/Users/Public/captures/$nom.png" "$dossier/$nom.png" && echo "$dossier/$nom.png" ;;
+  tests-windows)
+             # Le SDK .NET est installé dans C:\dotnet (script officiel dotnet-install.ps1).
+             archive="$(mktemp -d)/source.zip"
+             (cd ../.. && git ls-files -co --exclude-standard -z | xargs -0 zip -q "$archive")
+             scp_vm "$archive" Docker@127.0.0.1:C:/Users/Public/source.zip
+             ssh_vm 'Remove-Item -Recurse -Force C:\Users\Public\source -ErrorAction SilentlyContinue;
+                     Expand-Archive C:\Users\Public\source.zip C:\Users\Public\source;
+                     Set-Location C:\Users\Public\source;
+                     $env:DOTNET_CLI_TELEMETRY_OPTOUT=1; $env:DOTNET_NOLOGO=1; $env:DOTNET_CLI_UI_LANGUAGE="en";
+                     C:\dotnet\dotnet.exe test CompteurRetraite.sln -c Release --logger "console;verbosity=normal" 2>&1 |
+                       Select-String -Pattern "Failed|Passed!|total:|error|Assert|Exception|at CompteurRetraite" |
+                       Select-Object -First 60' ;;
   installer-exe)
              # Envoie publish/CompteurRetraite.exe dans Téléchargements (par SSH, plus fiable que le dossier partagé),
              # puis le lance dans la session visible, comme un double-clic.
              scp_vm ../../publish/CompteurRetraite.exe Docker@127.0.0.1:C:/Users/Docker/Downloads/CompteurRetraite.exe
              lancer_vm 'C:\Users\Docker\Downloads\CompteurRetraite.exe' ;;
-  *) echo "Usage : $0 demarrer|arreter|etat|supprimer|ssh|lancer|taper|diag|capture|installer-exe"; exit 1 ;;
+  *) echo "Usage : $0 demarrer|arreter|etat|supprimer|ssh|lancer|taper|diag|capture|tests-windows|installer-exe"; exit 1 ;;
 esac
